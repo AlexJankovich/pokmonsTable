@@ -1,61 +1,56 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../Redux/Store";
-import {GetNextPokemons, GetPokemons, PokemonInitialStateType} from "../../Redux/PokemonsReducer";
+import {
+    GetPokemons,
+    PokemonInitialStateType,
+    SetCurrentPage,
+    SetPageSize
+} from "../../Redux/PokemonsReducer";
 import {AppInitialStateType} from "../../Redux/AppReducer";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {PokemonCard} from "../PokemonCard/PokemonCard";
-import {Button, Row, Spin} from "antd";
+import {Button, Pagination, Row, Space, Spin} from "antd";
 import {LeftOutlined, RightOutlined} from "@ant-design/icons";
 
 export const MainPage = () => {
 
-const dispatch = useDispatch()
+    const dispatch = useDispatch()
 
-const Pokemons = useSelector<AppStateType, PokemonInitialStateType>(state => state.pokemons)
+    const Pokemons = useSelector<AppStateType, PokemonInitialStateType>(state => state.pokemons)
 
-const AppData = useSelector<AppStateType, AppInitialStateType>(state => state.app)
+    const AppData = useSelector<AppStateType, AppInitialStateType>(state => state.app)
 
-useEffect(() => {
-    dispatch(GetPokemons())
-}, [dispatch])
+    useEffect(() => {
+        dispatch(GetPokemons(Pokemons.pageSize, Pokemons.currentPage))
+    }, [dispatch])
 
-const PokemonsRender = Pokemons?.results ? Pokemons.results.map((i, index) => {
-    return <div key={index}><PokemonCard url={i.url} name={i.name} key={index} index={index}/></div>
-}) : null
+    const PokemonsRender = Pokemons?.results ? Pokemons.results.map((i, index) => {
+        return <div key={index}><PokemonCard url={i.url} name={i.name} key={index} index={index}/></div>
+    }) : null
 
-const toNextPage = () => {
-    if (!Pokemons.next) return
-    dispatch(GetNextPokemons(Pokemons.next))
-}
-const toPreviousPage = () => {
-    if (!Pokemons.previous) return
-    dispatch(GetNextPokemons(Pokemons.previous))
-}
+    const setPage = (page: number, pageSize?: number) => {
+        dispatch(GetPokemons(pageSize, page))
+        dispatch(SetPageSize(pageSize||10))
+        dispatch(SetCurrentPage(page))
+    }
 
-return (
-    <div className="App">
+    return <div className="App">
         {AppData.isFetching ? <Spin/> : null}
         <div className="pokeWrapper">
             <Row gutter={{xs: 8, sm: 16, md: 24, lg: 32}}>
                 {PokemonsRender}
             </Row>
         </div>
-        <div className="buttonWrapper">{Pokemons?.previous ? <Button
-            onClick={toPreviousPage}
-            disabled={AppData.isFetching}
-            type='primary'
-            shape='round'
-            size='large'
-            icon={<LeftOutlined/>}
-        ></Button> : null}
-            {Pokemons?.next ? <Button
-                onClick={toNextPage}
-                disabled={AppData.isFetching}
-                type='primary'
-                shape='round'
-                size='large'
-                icon={<RightOutlined/>}
-            ></Button> : null}</div>
+        <>
+            <Row justify='center'><Pagination
+                total={Pokemons.count}
+                showSizeChanger
+                showQuickJumper
+                onChange={setPage}
+                defaultPageSize={Pokemons.pageSize}
+                // showTotal={total => `Total ${total} items`}
+                responsive
+            /></Row>
+        </>
     </div>
-)
 }

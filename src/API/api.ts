@@ -3,8 +3,8 @@ import axios from 'axios'
 export const instance = axios.create({baseURL: 'https://pokeapi.co/api/v2/'})
 
 export const PokeApi = {
-    PokesGet: (id?: number) => {
-        return instance.get(`pokemon/${id || '?limit=20&offset=0'}`).then(res => {
+    PokesGet: ( pageSize?:number, page?:number) => {
+        return instance.get(`pokemon/?limit=${pageSize}&offset=${page}`).then(res => {
             console.log(res.status)
             return res
         })

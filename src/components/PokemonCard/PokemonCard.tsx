@@ -4,6 +4,7 @@ import {AppStateType} from "../../Redux/Store";
 import {Card} from "antd"
 import {NavLink} from "react-router-dom";
 import {cardInitialStateType, GetCardInfo} from "../../Redux/CardReducer";
+import {routeLinks} from "../../Common/routes";
 
 type PokemonKartType = {
     url: string
@@ -26,7 +27,7 @@ export const PokemonCard = (props: PokemonKartType) => {
     }
 
     return <div>
-        <NavLink to={'/pokemon/' + props.name}>
+        <NavLink to={routeLinks.pokemon + props.name}>
             <Card
                 style={{width: 250, margin: 10}}
                 title={props.name}

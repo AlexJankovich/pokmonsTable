@@ -89,10 +89,10 @@ const PokemonInitialState = {
         front_shiny: '',
         other: {
             dream_world: '',
-            "official-artwork": {front_default:''}
+            "official-artwork": {front_default: ''}
         },
         versions: {
-           " generation-i": {
+            " generation-i": {
                 "red-blue": {},
                 yellow: {},
             },
@@ -133,7 +133,7 @@ const PokemonInitialState = {
             effort: 0,
             stat: {
                 name: '',
-                url:'',
+                url: '',
             }
         }
     ],
@@ -150,58 +150,37 @@ const PokemonInitialState = {
 
 export type PokemonStateType = typeof PokemonInitialState
 
-export const PokemonReducer = (state=PokemonInitialState,actions:PokemonActionTypes):PokemonStateType => {
-    switch (actions.type){
-        case "POKEMON/SET-POKEMON-DATA":{
-         return {...actions.Data}
-        }
-        case "POKEMON/SET-NEXT-POKEMON-DATA":{
-            debugger
+export const PokemonReducer = (state = PokemonInitialState, actions: PokemonActionTypes): PokemonStateType => {
+
+    switch (actions.type) {
+        case "POKEMON/SET-POKEMON-DATA": {
             return {...actions.Data}
         }
-        default: return state
+        default:
+            return state
     }
+
 }
 
-export const SetPokemonData = (Data:PokemonStateType) => {
-    return{
-        type:'POKEMON/SET-POKEMON-DATA', Data
+export const SetPokemonData = (Data: PokemonStateType) => {
+    return {
+        type: 'POKEMON/SET-POKEMON-DATA', Data
     } as const
 }
-export const SetNextPokemonData = (Data:PokemonStateType) => {
-    return{
-        type:'POKEMON/SET-NEXT-POKEMON-DATA', Data
-    } as const
-}
+
 
 type SetPokemonDataType = ReturnType<typeof SetPokemonData>
-type SetNextPokemonDataType = ReturnType<typeof SetNextPokemonData>
 
-type PokemonActionTypes = SetPokemonDataType | SetNextPokemonDataType
+type PokemonActionTypes = SetPokemonDataType
 
-export const GetPokemon = (name:string) => {
-    return (dispatch:Dispatch<any>) =>{
-        debugger
-        dispatch(PokemonToggleIsFetching(true))
-        PokeApi.PokemonGet(name).then(response=>{
-            debugger
+export const GetPokemon = (name: string) => {
+    return (dispatch: Dispatch<any>) => {
+        PokeApi.PokemonGet(name).then(response => {
             if (response.status === 200) {
                 dispatch(SetPokemonData(response.data))
-            }})
-            .catch(e=>dispatch(SetError(e.message)))
-            .finally(()=>dispatch(PokemonToggleIsFetching(false)))
-    }
-}
-export const GetNextPokemon = (name:string) => {
-    return (dispatch:Dispatch<any>) =>{
-        debugger
-        dispatch(PokemonToggleIsFetching(true))
-        PokeApi.PokemonGet(name).then(response=>{
-            debugger
-            if (response.status === 200) {
-                dispatch(SetNextPokemonData(response.data))
-            }})
-            .catch(e=>dispatch(SetError(e.message)))
-            .finally(()=>dispatch(PokemonToggleIsFetching(false)))
+            }
+        })
+            .catch(e => dispatch(SetError(e.message)))
+            .finally(() => dispatch(PokemonToggleIsFetching(false)))
     }
 }

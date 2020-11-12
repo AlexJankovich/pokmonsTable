@@ -1,42 +1,65 @@
-import {Dispatch} from "react";
+import {ThunkAction} from "redux-thunk";
 import {PokeApi} from "../API/api";
 import {AppActionTypes, SetError, ToggleIsFetching} from "./AppReducer";
 import {PokemonStateType} from "./PokemonReducer";
-
-const PokemonInitialState: any = null
-type resultsType = Array<PokemonsResultsType>
+import {AppStateType} from "./Store";
 
 type PokemonsResultsType = {
     name: string
     url: string
     img?: string
-    id?: string
+    id?: number
 }
 
-export type PokemonInitialStateType = {
-    count?: number
-    next?: string
-    previous?: string
-    results?: resultsType
+const PokemonInitialState = {
+    count: 1,
+    // next: '',
+    // previous: '',
+    results: [
+        {
+            name: '',
+            url: '',
+            img: '',
+            id: 0
+        }
+    ],
+    currentPage: 1,
+    pageSize: 20
 }
 
-export const PokemonsReducers = (state = PokemonInitialState, Actions: PokemonsActionTypes) => {
-    switch (Actions.type) {
+export type PokemonInitialStateType = typeof PokemonInitialState
+
+export const PokemonsReducers = (state: PokemonInitialStateType = PokemonInitialState, actions: PokemonsActionTypes): PokemonInitialStateType => {
+    switch (actions.type) {
         case "POKEMONS/SET-POKEMONS-DATA": {
-            return {...Actions.Data}
+            return {
+                ...state,
+                count: actions.Data.count,
+                results: actions.Data.results
+            }
         }
         case "POKEMONS/SET-POKEMONS-IMG-DATA": {
-
             return {
-                ...state, results: [...state.results.map((i: any, index: number) => {
-                    if (i.name === Object.values(Actions.Data).find(v => v === i.name)) {
-                        i.push = (Actions?.Data?.sprites?.other["official-artwork"].front_default, Actions.Data.id)
+                ...state, results: state.results.map((i) => {
+                    if (i.name && i.name === actions.Data.name) {
+                        i = {
+                            ...i,
+                            id: actions.Data.id,
+                            img: actions.Data.sprites.other["official-artwork"].front_default
+                        }
+                    } else {
+                        i = {...i}
                     }
-                })]
+                    return i
+                })
             }
-            return
         }
-
+        case "POKEMONS/SET-PAGE-SIZE": {
+            return {...state, pageSize: actions.size}
+        }
+        case 'POKEMONS/SET-CURRENT-SIZE': {
+            return {...state, pageSize: actions.page}
+        }
         default:
             return state
     }
@@ -52,15 +75,35 @@ export const SetPokemonsImgData = (Data: PokemonStateType,) => {
         type: 'POKEMONS/SET-POKEMONS-IMG-DATA', Data
     } as const
 }
+export const SetPageSize = (size: number) => {
+    return {
+        type: 'POKEMONS/SET-PAGE-SIZE', size
+    } as const
+}
+export const SetCurrentPage = (page: number) => {
+    return {
+        type: 'POKEMONS/SET-CURRENT-SIZE', page
+    } as const
+}
+
+//Actions creators
 
 type SetPokemonsDataType = ReturnType<typeof SetPokemonsData>
 type SetPokemonsImgDataType = ReturnType<typeof SetPokemonsImgData>
+type SetPageSizeType = ReturnType<typeof SetPageSize>
+type SetCurrentPageType = ReturnType<typeof SetCurrentPage>
 
-type PokemonsActionTypes = SetPokemonsDataType | SetPokemonsImgDataType
+// Types of Actions creators
 
-export const GetPokemons = (id?: number) => {
-    return (dispatch: Dispatch<DispatchType>) => {
-       return  PokeApi.PokesGet().then(response => {
+type PokemonsActionTypes =
+    SetPokemonsDataType
+    | SetPokemonsImgDataType
+    | SetPageSizeType
+    | SetCurrentPageType
+ //Thunks
+export const GetPokemons = (pageSize?: number, currentPage?: number): ThunkAction<any, AppStateType, unknown, DispatchType> => {
+    return (dispatch, getState) => {
+        return PokeApi.PokesGet(pageSize || getState().pokemons.pageSize, currentPage || getState().pokemons.currentPage).then(response => {
             if (response.status === 200) {
                 dispatch(SetPokemonsData(response.data))
             }
@@ -70,17 +113,5 @@ export const GetPokemons = (id?: number) => {
     }
 }
 
-export const GetNextPokemons = (next: string) => {
-    return (dispatch: Dispatch<DispatchType>) => {
-        dispatch(ToggleIsFetching(true))
-        PokeApi.PokesNextGet(next).then(response => {
-            if (response.status === 200) {
-                dispatch(SetPokemonsData(response.data))
-            }
-        })
-            .catch(e => dispatch(SetError(e.message)))
-            .finally(() => dispatch(ToggleIsFetching(false)))
-    }
-}
 
 type DispatchType = PokemonsActionTypes | AppActionTypes

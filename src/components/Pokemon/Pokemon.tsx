@@ -2,11 +2,12 @@ import React, {useEffect} from "react"
 import {Button, Card, Row, Space} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../Redux/Store";
-import {GetNextPokemon, PokemonStateType} from "../../Redux/PokemonReducer";
+import { GetPokemon, PokemonStateType} from "../../Redux/PokemonReducer";
 import {Link, useParams} from "react-router-dom";
+import {routeLinks} from "../../Common/routes";
 
 export const Pokemon = () => {
-    debugger
+
     let name: { name: string } = useParams()
 
     const Pokemon = useSelector<AppStateType, PokemonStateType>(state => state.pokemon)
@@ -14,7 +15,7 @@ export const Pokemon = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(GetNextPokemon(name.name))
+        dispatch(GetPokemon(name.name))
     }, [name.name])
 
     let ImgUrl = Pokemon.sprites ? Pokemon.sprites.other["official-artwork"].front_default : ''
@@ -42,14 +43,40 @@ export const Pokemon = () => {
                         <Card title='Weight' style={{textAlign: "center"}}>
                             {Pokemon.weight}
                         </Card>
-                    </Space></Row>
-                <Space>
-                    <Button title='next'><Link
-                        to={`/Pokemon/${Pokemon.id - 1 === 0 ? 1 : Pokemon.id - 1}`}>previous</Link></Button>
-                    <Button title='next'><Link to={`/Pokemon/${Pokemon.id + 1}`}>nextBeast</Link></Button>
-                </Space>
+                    </Space>
+                </Row>
 
-            </Card></Row>
+                <Row justify="space-between">
+                    <Button title='next' type={"primary"}
+                            style={{
+                                backgroundColor: "#dbdada",
+                                color: 'black',
+                                border: '1px solid black',
+                            }}>
+
+                        <Link
+                            to={routeLinks.pokemon + `${Pokemon.id - 1 === 0 ? 1 : Pokemon.id - 1}`}>
+                            previous
+                        </Link>
+
+                    </Button>
+
+                    <Button title='next' type={"primary"}
+                            style={{
+                                backgroundColor: "#dbdada",
+                                color: 'black',
+                                border: '1px solid black'
+                            }}>
+
+                        <Link to={routeLinks.pokemon + (Pokemon.id + 1)}>
+                            nextBeast
+                        </Link>
+
+                    </Button>
+                </Row>
+
+            </Card>
+            </Row>
         </>)
 
 }

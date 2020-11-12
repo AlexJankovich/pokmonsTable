@@ -1,6 +1,7 @@
 import { Action } from "redux"
 import { ThunkAction } from "redux-thunk"
 import { GetPokemons } from "./PokemonsReducer"
+import {AppStateType} from "./Store";
 
 const AppInitialState = {
     isFetching: false,
@@ -52,8 +53,8 @@ export const setInitializeSuccess = (initialized:boolean) => ({
 
 
 
-export const InitializeApp = (): ThunkAction<void, AppInitialStateType, unknown, Action<string>> => (dispatch) => {
-    let promise = dispatch(GetPokemons())
+export const InitializeApp = (): ThunkAction<void, AppStateType, unknown, Action<string>> => (dispatch,getState) => {
+    let promise = dispatch(GetPokemons(getState().pokemons.pageSize, getState().pokemons.currentPage))
     promise.then(()=>
         dispatch(setInitializeSuccess(true))
     )
