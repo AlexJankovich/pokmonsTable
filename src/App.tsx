@@ -1,17 +1,27 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import 'antd/dist/antd.css'
 import './App.css';
 import {Breadcrumb, Layout, Menu} from "antd";
 import {MainPage} from "./components/MainPage/MainPage";
 import {BrowserRouter, Link, Route, Switch} from "react-router-dom";
 import {Pokemon} from "./components/Pokemon/Pokemon";
+import {useDispatch, useSelector} from "react-redux";
+import {InitializeApp} from "./Redux/AppReducer";
+import {AppStateType} from "./Redux/Store";
 
 const {SubMenu} = Menu;
 const {Header, Content, Footer, Sider} = Layout;
 
 function App() {
+
+    const appProps = useSelector<AppStateType>(state => state.app)
+
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(InitializeApp())
+    }, [dispatch])
+
      return <>
-        <BrowserRouter>
             <Layout>
                 <Header className="header">
                     <div className="logo"/>
@@ -69,7 +79,6 @@ function App() {
                 </Content>
                 <Footer style={{textAlign: 'center'}}>Ant Design ©2018 Created by Ant UED</Footer>
             </Layout>
-        </BrowserRouter>
     </>
 }
 

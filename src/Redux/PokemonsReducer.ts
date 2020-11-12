@@ -60,7 +60,7 @@ type PokemonsActionTypes = SetPokemonsDataType | SetPokemonsImgDataType
 
 export const GetPokemons = (id?: number) => {
     return (dispatch: Dispatch<DispatchType>) => {
-        PokeApi.PokesGet().then(response => {
+       return  PokeApi.PokesGet().then(response => {
             if (response.status === 200) {
                 dispatch(SetPokemonsData(response.data))
             }

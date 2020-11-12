@@ -1,21 +1,29 @@
+import { Action } from "redux"
+import { ThunkAction } from "redux-thunk"
+import { GetPokemons } from "./PokemonsReducer"
+
 const AppInitialState = {
     isFetching: false,
     pokemonIsFetching: false,
-    Error: ''
+    Error: '',
+    isInitialise:false
 }
 
 export type AppInitialStateType = typeof AppInitialState
 
-export const AppReducer = (state: AppInitialStateType = AppInitialState, Actions: AppActionTypes) => {
-    switch (Actions.type) {
+export const AppReducer = (state: AppInitialStateType = AppInitialState, action: AppActionTypes) => {
+    switch (action.type) {
         case "APP/TOGGLE-IS-FETCHING": {
-            return {...state, isFetching: Actions.isFetching}
+            return {...state, isFetching: action.isFetching}
         }
         case "APP/POKEMON-TOGGLE-IS-FETCHING": {
-            return {...state, isFetching: Actions.pokemonIsFetching}
+            return {...state, isFetching: action.pokemonIsFetching}
         }
         case "APP/SET-ERROR": {
-            return {...state, isFetching: Actions.error}
+            return {...state, isFetching: action.error}
+        }
+        case "APP/SET-INITIALIZED":{
+            return {...state,isInitialise:action.initialized}
         }
         default:
             return state
@@ -38,8 +46,21 @@ export const SetError = (error: string) => {
     } as const
 }
 
+export const setInitializeSuccess = (initialized:boolean) => ({
+    type: 'APP/SET-INITIALIZED', initialized
+} as const)
+
+
+
+export const InitializeApp = (): ThunkAction<void, AppInitialStateType, unknown, Action<string>> => (dispatch) => {
+    let promise = dispatch(GetPokemons())
+    promise.then(()=>
+        dispatch(setInitializeSuccess(true))
+    )
+}
+type setInitializeType = ReturnType<typeof setInitializeSuccess>
 export type ToggleIsFetchingType = ReturnType<typeof ToggleIsFetching>
 export type PokemonToggleIsFetchingType = ReturnType<typeof PokemonToggleIsFetching>
 export type SetErrorType = ReturnType<typeof SetError>
 
-export type AppActionTypes = ToggleIsFetchingType | SetErrorType | PokemonToggleIsFetchingType
+export type AppActionTypes = ToggleIsFetchingType | SetErrorType | PokemonToggleIsFetchingType | setInitializeType
