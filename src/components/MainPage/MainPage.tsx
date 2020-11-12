@@ -1,17 +1,13 @@
 import {useDispatch, useSelector} from "react-redux";
-import {AppStateType} from "../Redux/Store";
-import {GetNextPokemons, GetPokemons, PokemonInitialStateType} from "../Redux/PokemonsReducer";
-import {AppInitialStateType} from "../Redux/AppReducer";
+import {AppStateType} from "../../Redux/Store";
+import {GetNextPokemons, GetPokemons, PokemonInitialStateType} from "../../Redux/PokemonsReducer";
+import {AppInitialStateType} from "../../Redux/AppReducer";
 import React, {useEffect} from "react";
-import {PokemonKart} from "./PokemonKart";
+import {PokemonCard} from "../PokemonCard/PokemonCard";
 import {Button, Row, Spin} from "antd";
 import {LeftOutlined, RightOutlined} from "@ant-design/icons";
 
-
-
-
 export const MainPage = () => {
-
 
 const dispatch = useDispatch()
 
@@ -23,12 +19,9 @@ useEffect(() => {
     dispatch(GetPokemons())
 }, [dispatch])
 
-const PokemonsRender = Pokemons ? Pokemons.results.map((i, index) => {
-    return <div><PokemonKart url={i.url} name={i.name} key={index} index={index}/></div>
+const PokemonsRender = Pokemons?.results ? Pokemons.results.map((i, index) => {
+    return <div key={index}><PokemonCard url={i.url} name={i.name} key={index} index={index}/></div>
 }) : null
-// const PokemonsRender = Pokemons ?
-//     <div><PokemonKart name={Pokemons.results[0].url}/></div>
-//  : null
 
 const toNextPage = () => {
     if (!Pokemons.next) return
