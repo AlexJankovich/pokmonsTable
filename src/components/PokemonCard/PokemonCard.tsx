@@ -1,10 +1,10 @@
-import React, {useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {AppStateType} from "../../Redux/Store";
-import {Card} from "antd"
-import {NavLink} from "react-router-dom";
-import {cardInitialStateType, GetCardInfo} from "../../Redux/CardReducer";
-import {routeLinks} from "../../Common/routes";
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppStateType} from '../../Redux/Store';
+import {Card} from 'antd'
+import {NavLink} from 'react-router-dom';
+import {cardInitialStateType, GetCardInfo} from '../../Redux/CardReducer';
+import {routeLinks} from '../../Common/routes';
 
 type PokemonKartType = {
     url: string
@@ -22,8 +22,8 @@ export const PokemonCard = (props: PokemonKartType) => {
     }, [dispatch, props.name])
 
     let ImgUrl = ''
-    if(Pokemon[Pokemon.findIndex(i=>i.name===props.name)]){
-        ImgUrl=Pokemon[Pokemon.findIndex(i=>i.name===props.name)].img
+    if (Pokemon[Pokemon.findIndex(i => i.name === props.name)]) {
+        ImgUrl = Pokemon[Pokemon.findIndex(i => i.name === props.name)].img
     }
 
     return <div>
@@ -32,13 +32,12 @@ export const PokemonCard = (props: PokemonKartType) => {
                 style={{width: 250, margin: 10}}
                 title={props.name}
                 cover={<img src={ImgUrl} alt=""/>}
-                loading={ImgUrl===''}
+                loading={ImgUrl === ''}
                 type='inner'
                 bordered
                 hoverable
                 size='small'
-            >
-            </Card>
+            />
         </NavLink>
     </div>
 

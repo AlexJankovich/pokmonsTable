@@ -1,11 +1,16 @@
-.App{
-  width: 80%;
-  margin: 0 auto;
-}
-.pokeWrapper{
-  margin: 0 auto;
-}
-.buttonWrapper{
-  margin: 0 auto;
-  text-align: center;
-}
+
+.app {
+	min-height: 100vh;
+	}
+
+.app .appWrapper {
+	padding: 5vh 0;
+	background-color: #8cc8ff ;
+	}
+
+.contentWrapper {
+	width: 80%;
+	margin: 0 auto;
+	background-color: #8cc8ff ;
+	}
+

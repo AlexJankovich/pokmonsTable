@@ -4,13 +4,15 @@ import {PokemonsReducers} from "./PokemonsReducer";
 import {AppReducer} from "./AppReducer";
 import { PokemonReducer } from './PokemonReducer';
 import {CardReducer} from "./CardReducer";
+import {SearchReducer} from './SearchReducer';
 
 const RootReducer = combineReducers(
     {
         pokemons: PokemonsReducers,
         app:AppReducer,
         pokemon:PokemonReducer,
-        card: CardReducer
+        card: CardReducer,
+        search: SearchReducer
     }
 )
 

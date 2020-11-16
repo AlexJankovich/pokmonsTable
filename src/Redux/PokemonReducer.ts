@@ -168,7 +168,6 @@ export const SetPokemonData = (Data: PokemonStateType) => {
     } as const
 }
 
-
 type SetPokemonDataType = ReturnType<typeof SetPokemonData>
 
 type PokemonActionTypes = SetPokemonDataType

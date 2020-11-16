@@ -2,7 +2,8 @@ export const routes = {
     default: `/`,
     mainPage: `/mainPage`,
     pokemon: `/Pokemon/:name?`,
-    notfound: '/*'
+    notfound: '/*',
+    error:'/404'
 }
 
 export const routeLinks ={

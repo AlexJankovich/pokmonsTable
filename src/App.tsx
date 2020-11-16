@@ -1,45 +1,39 @@
 import React, {useEffect} from 'react';
 import 'antd/dist/antd.css'
 import './App.css';
-import {Breadcrumb, Button, Layout, Menu} from "antd";
-import {MainPage} from "./components/MainPage/MainPage";
-import {Link, Route, Switch, useLocation} from "react-router-dom";
-import {Pokemon} from "./components/Pokemon/Pokemon";
-import {useDispatch} from "react-redux";
-import {InitializeApp} from "./Redux/AppReducer";
-import {routeLinks, routes} from './Common/routes';
-
-const {SubMenu} = Menu;
-const {Header, Content, Footer, Sider} = Layout;
+import {MainPage} from './components/MainPage/MainPage';
+import {Route, Switch} from 'react-router-dom';
+import {Pokemon} from './components/Pokemon/Pokemon';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppInitialStateType, InitializeApp} from './Redux/AppReducer';
+import {routes} from './Common/routes';
+import {Header} from './components/Header/Header';
+import {AppStateType} from './Redux/Store';
+import {Preloader} from './Common/Preloader';
+import {Error404} from './Common/Error404Page';
+import {NativeFooter} from './components/Footer/Footer';
 
 function App() {
 
-    // const appProps = useSelector<AppStateType>(state => state.app)
-
-    const url = useLocation()
+    const appProps = useSelector<AppStateType, AppInitialStateType>(state => state.app)
 
     const dispatch = useDispatch()
+
     useEffect(() => {
         dispatch(InitializeApp())
     }, [dispatch])
 
-    return <div>
-        <Layout>
-            <Header className="header">
-                <div className="logo"/>
-                <Menu
-                    theme="dark"
-                    mode="horizontal"
-                    selectedKeys={[`${url.pathname === "/mainPage"||url.pathname === "/"
-                        ? "/mainPage" : "/Pokemon/"}`]}
-                >
-                    <Menu.Item key="/mainPage"><Link to={routeLinks.mainPage}/>Main Page</Menu.Item>
-                    <Menu.Item key="/Pokemon/"><Link to={routeLinks.defaultPokemon}/>Pokemon page</Menu.Item>
-                </Menu>
-            </Header>
-            <Content style={{padding: '0 50px'}}>
-                <Layout className="site-layout-background" style={{padding: '24px 0'}}>
-                    <Content style={{padding: '0 5px', minHeight: 280}}>
+    return <div className='app'>
+        <div className="headerWrapper">
+            <Header/>
+        </div>
+        <div className="appWrapper">
+            {!appProps.isInitialise
+                ? <Preloader/>
+                : appProps.Error
+                    ? <Error404 message={appProps.Error}/>
+                    :
+                    <div className='contentWrapper'>
                         <Switch>
                             <Route exact path={routes.default}
                                    render={() => <MainPage/>}/>
@@ -50,11 +44,12 @@ function App() {
                             <Route path={routes.notfound}
                                    render={() => <div>ERROR 404 NOT FOUND</div>}/>
                         </Switch>
-                    </Content>
-                </Layout>
-            </Content>
-            <Footer style={{textAlign: 'center'}}>Ant Design ©2018 Created by Ant UED</Footer>
-        </Layout>
+                    </div>
+            }
+        </div>
+        <div className='footer'>
+            <NativeFooter/>
+        </div>
     </div>
 }
 

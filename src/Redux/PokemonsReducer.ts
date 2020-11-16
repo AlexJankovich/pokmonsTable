@@ -4,7 +4,7 @@ import {AppActionTypes, SetError, ToggleIsFetching} from "./AppReducer";
 import {PokemonStateType} from "./PokemonReducer";
 import {AppStateType} from "./Store";
 
-type PokemonsResultsType = {
+export type PokemonsResultsType = {
     name: string
     url: string
     img?: string
@@ -13,8 +13,6 @@ type PokemonsResultsType = {
 
 const PokemonInitialState = {
     count: 1,
-    // next: '',
-    // previous: '',
     results: [
         {
             name: '',
@@ -24,7 +22,7 @@ const PokemonInitialState = {
         }
     ],
     currentPage: 1,
-    pageSize: 20
+    pageSize: 10
 }
 
 export type PokemonInitialStateType = typeof PokemonInitialState
@@ -58,7 +56,7 @@ export const PokemonsReducers = (state: PokemonInitialStateType = PokemonInitial
             return {...state, pageSize: actions.size}
         }
         case 'POKEMONS/SET-CURRENT-SIZE': {
-            return {...state, pageSize: actions.page}
+            return {...state, currentPage: actions.page}
         }
         default:
             return state
@@ -101,14 +99,17 @@ type PokemonsActionTypes =
     | SetPageSizeType
     | SetCurrentPageType
  //Thunks
-export const GetPokemons = (pageSize?: number, currentPage?: number): ThunkAction<any, AppStateType, unknown, DispatchType> => {
+export const GetPokemons = (pageSize: number=20, currentPage: number): ThunkAction<any, AppStateType, unknown, DispatchType> => {
     return (dispatch, getState) => {
-        return PokeApi.PokesGet(pageSize || getState().pokemons.pageSize, currentPage || getState().pokemons.currentPage).then(response => {
+        return PokeApi.PokesGet(pageSize || getState().pokemons.pageSize,
+            currentPage || getState().pokemons.currentPage).then(response => {
             if (response.status === 200) {
                 dispatch(SetPokemonsData(response.data))
             }
         })
-            .catch(e => dispatch(SetError(e.message)))
+            .catch(e => {
+                dispatch(SetError(e.message))
+            })
             .finally(() => dispatch(ToggleIsFetching(false)))
     }
 }

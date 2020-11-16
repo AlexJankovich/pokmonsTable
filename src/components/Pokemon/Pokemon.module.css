@@ -1,0 +1,15 @@
+.searchWrapper {
+	position: absolute;
+	z-index: 3;
+	top: 0;
+	}
+
+.pokemonWrapper {
+	position: relative;
+	padding-top: 150px;
+	}
+
+.skillStyle {
+	width:80%;
+	max-width:155px;
+	}

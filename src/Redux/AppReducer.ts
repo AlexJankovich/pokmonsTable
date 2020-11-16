@@ -21,7 +21,7 @@ export const AppReducer = (state: AppInitialStateType = AppInitialState, action:
             return {...state, isFetching: action.pokemonIsFetching}
         }
         case "APP/SET-ERROR": {
-            return {...state, isFetching: action.error}
+            return {...state, Error: action.error}
         }
         case "APP/SET-INITIALIZED":{
             return {...state,isInitialise:action.initialized}
@@ -31,16 +31,20 @@ export const AppReducer = (state: AppInitialStateType = AppInitialState, action:
     }
 }
 
+//actions
+
 export const ToggleIsFetching = (isFetching: boolean) => {
     return {
         type: 'APP/TOGGLE-IS-FETCHING', isFetching
     } as const
 }
+
 export const PokemonToggleIsFetching = (pokemonIsFetching: boolean) => {
     return {
         type: 'APP/POKEMON-TOGGLE-IS-FETCHING', pokemonIsFetching
     } as const
 }
+
 export const SetError = (error: string) => {
     return {
         type: 'APP/SET-ERROR', error
@@ -51,7 +55,7 @@ export const setInitializeSuccess = (initialized:boolean) => ({
     type: 'APP/SET-INITIALIZED', initialized
 } as const)
 
-
+//thunk
 
 export const InitializeApp = (): ThunkAction<void, AppStateType, unknown, Action<string>> => (dispatch,getState) => {
     let promise = dispatch(GetPokemons(getState().pokemons.pageSize, getState().pokemons.currentPage))
@@ -59,6 +63,9 @@ export const InitializeApp = (): ThunkAction<void, AppStateType, unknown, Action
         dispatch(setInitializeSuccess(true))
     )
 }
+
+//Actions types
+
 type setInitializeType = ReturnType<typeof setInitializeSuccess>
 export type ToggleIsFetchingType = ReturnType<typeof ToggleIsFetching>
 export type PokemonToggleIsFetchingType = ReturnType<typeof PokemonToggleIsFetching>
