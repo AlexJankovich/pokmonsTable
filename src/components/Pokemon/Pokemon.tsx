@@ -18,7 +18,7 @@ export const Pokemon = () => {
 
     useEffect(() => {
         dispatch(GetPokemon(name.name))
-    }, [name.name])
+    }, [dispatch, name.name])
 
     let ImgUrl = Pokemon.sprites ? Pokemon.sprites.other['official-artwork'].front_default : ''
 

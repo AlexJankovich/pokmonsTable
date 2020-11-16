@@ -14,7 +14,7 @@ export const MainPage = () => {
 
     useEffect(() => {
         dispatch(GetPokemons(Pokemons.pageSize, Pokemons.currentPage))
-    }, [dispatch])
+    }, [dispatch, Pokemons.pageSize, Pokemons.currentPage])
 
     const PokemonsArr = Pokemons?.results ? Pokemons.results.map((i, index) => {
         return <div key={i.name}><PokemonCard url={i.url} name={i.name} key={i.name} index={index}/></div>
