@@ -9,7 +9,24 @@
 	padding-top: 150px;
 	}
 
+.pokemonContentWrapper img {
+	max-width: 700px;
+	}
+
+.skillStyleWrapper {
+	max-width: 400px;
+	}
+
 .skillStyle {
 	width:80%;
 	max-width:155px;
+	}
+
+@media screen and (max-width: 1010px){
+	.skillStyleWrapper {
+		max-width: 100%;
+		}
+	.pokemonContentWrapper img {
+		max-width: 100%;
+		}
 	}

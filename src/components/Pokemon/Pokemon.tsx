@@ -34,16 +34,16 @@ export const Pokemon = () => {
             <div>
                 <Row justify='center'>
                     <Card
-                        style={{textAlign: 'center', maxWidth: '600px'}}
+                        style={{textAlign: 'center'}}
                         loading={ImgUrl === ''}
                         title={Pokemon.name}
                         type='inner'
                     >
-                        <Row justify='center'>
-                            <img src={ImgUrl} alt="PokemonIMG" style={{width: '100%'}}/>
-                            <Row justify='center' gutter={{xs: 4, sm: 10, md: 12, lg: 45}}>
-
-                                <Card title='Abilities' className={s.skillStyle} >
+                        <Row justify='center' className={s.pokemonContentWrapper}>
+                            <img src={ImgUrl} alt="PokemonIMG"/>
+                            <Row justify='center' gutter={{xs: 4, sm: 10, md: 12, lg: 45}}
+                                 className={s.skillStyleWrapper}>
+                                <Card title='Abilities' className={s.skillStyle}>
                                     {Pokemon.abilities.map((i, index) => <div key={index}>{i.ability.name}</div>)}
                                 </Card>
 

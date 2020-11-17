@@ -6,6 +6,7 @@
 .app .appWrapper {
 	padding: 5vh 0;
 	background-color: #8cc8ff ;
+	min-height: 100vh;
 	}
 
 .contentWrapper {
